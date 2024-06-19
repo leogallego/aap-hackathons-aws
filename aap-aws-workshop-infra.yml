@@ -91,13 +91,14 @@
       until: igw is not failed
       retries: 15
 
-    - name: Create the NAT Gateway and allocate a new EIP
+    - name: Create the NAT Gateway and allocate a new EIP (if one doesn't exist)
       amazon.aws.ec2_vpc_nat_gateway:
         region: "{{ ec2_region | default('us-east-1') }}"
         subnet_id: "{{ public_subnet.subnet.id }}"
         wait: true
         tags:
           Name: "{{ ec2_name_prefix | default('ansible-aas-natgw') }}"
+        if_exist_do_not_create: true
       register: natgw
       until: natgw is not failed
       retries: 15
