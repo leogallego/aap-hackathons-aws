@@ -47,7 +47,7 @@
       until: created_sg is not failed
       retries: 5
 
-    # This task is subdiving up the CIDR Block
+    # The following 3 tasks are subdiving up the CIDR Block
     - name: Create the PUBLIC subnet for ansible-aas-vpc
       amazon.aws.ec2_vpc_subnet:
         region: "{{ ec2_region | default('us-east-1') }}"
