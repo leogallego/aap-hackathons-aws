@@ -31,18 +31,18 @@
             ports:
               - 22
             cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            ports:
-              - 80
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            ports:
-              - 443
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            ports:
-              - 27199
-            cidr_ip: 0.0.0.0/0
+          # - proto: tcp
+          #   ports:
+          #     - 80
+          #   cidr_ip: 0.0.0.0/0
+          # - proto: tcp
+          #   ports:
+          #     - 443
+          #   cidr_ip: 0.0.0.0/0
+          # - proto: tcp
+          #   ports:
+          #     - 27199
+          #   cidr_ip: 0.0.0.0/0
       register: created_sg
       until: created_sg is not failed
       retries: 5
@@ -59,27 +59,27 @@
       until: public_subnet is not failed
       retries: 15
 
-    - name: Create THE PRIVATE subnet for ansible-aas-vpc
-      amazon.aws.ec2_vpc_subnet:
-        region: "{{ ec2_region | default('us-east-1') }}"
-        vpc_id: "{{ created_vpc.vpc.id }}"
-        cidr: "{{ ec2_cidr | default('10.200.2.0/23') }}"
-        tags:
-          Name: "{{ ec2_name_prefix | default('private') }}"
-      register: private_subnet
-      until: private_subnet is not failed
-      retries: 15
+    # - name: Create THE PRIVATE subnet for ansible-aas-vpc
+    #   amazon.aws.ec2_vpc_subnet:
+    #     region: "{{ ec2_region | default('us-east-1') }}"
+    #     vpc_id: "{{ created_vpc.vpc.id }}"
+    #     cidr: "{{ ec2_cidr | default('10.200.2.0/23') }}"
+    #     tags:
+    #       Name: "{{ ec2_name_prefix | default('private') }}"
+    #   register: private_subnet
+    #   until: private_subnet is not failed
+    #   retries: 15
 
-    - name: Create the EXECUTION-NODES subnet for ansible-aas-vpc
-      amazon.aws.ec2_vpc_subnet:
-        region: "{{ ec2_region | default('us-east-1') }}"
-        vpc_id: "{{ created_vpc.vpc.id }}"
-        cidr: "{{ ec2_cidr | default('10.200.1.0/24') }}"
-        tags:
-          Name: "{{ ec2_name_prefix | default('execution-nodes') }}"
-      register: execution_nodes_subnet
-      until: execution_nodes_subnet is not failed
-      retries: 15
+    # - name: Create the EXECUTION-NODES subnet for ansible-aas-vpc
+    #   amazon.aws.ec2_vpc_subnet:
+    #     region: "{{ ec2_region | default('us-east-1') }}"
+    #     vpc_id: "{{ created_vpc.vpc.id }}"
+    #     cidr: "{{ ec2_cidr | default('10.200.1.0/24') }}"
+    #     tags:
+    #       Name: "{{ ec2_name_prefix | default('execution-nodes') }}"
+    #   register: execution_nodes_subnet
+    #   until: execution_nodes_subnet is not failed
+    #   retries: 15
 
     - name: Create the Internet Gateway for {{ created_vpc.vpc.id }}
       amazon.aws.ec2_vpc_igw:
@@ -91,17 +91,17 @@
       until: igw is not failed
       retries: 15
 
-    - name: Create the NAT Gateway and allocate a new EIP (if one doesn't exist)
-      amazon.aws.ec2_vpc_nat_gateway:
-        region: "{{ ec2_region | default('us-east-1') }}"
-        subnet_id: "{{ public_subnet.subnet.id }}"
-        wait: true
-        tags:
-          Name: "{{ ec2_name_prefix | default('ansible-aas-natgw') }}"
-        if_exist_do_not_create: true
-      register: natgw
-      until: natgw is not failed
-      retries: 15
+    # - name: Create the NAT Gateway and allocate a new EIP (if one doesn't exist)
+    #   amazon.aws.ec2_vpc_nat_gateway:
+    #     region: "{{ ec2_region | default('us-east-1') }}"
+    #     subnet_id: "{{ public_subnet.subnet.id }}"
+    #     wait: true
+    #     tags:
+    #       Name: "{{ ec2_name_prefix | default('ansible-aas-natgw') }}"
+    #     if_exist_do_not_create: true
+    #   register: natgw
+    #   until: natgw is not failed
+    #   retries: 15
 
     - name: VPC Public Subnet Route Table is present for {{ created_vpc.vpc.id }}
       amazon.aws.ec2_vpc_route_table:
@@ -118,18 +118,18 @@
       until: public_routetable is not failed
       retries: 5
 
-    - name: VPC Private Subnet Route Table is present for {{ created_vpc.vpc.id }}
-      amazon.aws.ec2_vpc_route_table:
-        region: "{{ ec2_region | default('us-east-1') }}"
-        vpc_id: "{{ created_vpc.vpc.id }}"
-        subnets:
-          - "{{ private_subnet.subnet.id }}"
-          - "{{ execution_nodes_subnet.subnet.id }}"
-        routes:
-          - dest: 0.0.0.0/0
-            gateway_id: "{{ natgw.nat_gateway_id }}"
-        tags:
-          Name: "{{ ec2_name_prefix | default('private-rt') }}"
-      register: private_routetable
-      until: private_routetable is not failed
-      retries: 5
+    # - name: VPC Private Subnet Route Table is present for {{ created_vpc.vpc.id }}
+    #   amazon.aws.ec2_vpc_route_table:
+    #     region: "{{ ec2_region | default('us-east-1') }}"
+    #     vpc_id: "{{ created_vpc.vpc.id }}"
+    #     subnets:
+    #       - "{{ private_subnet.subnet.id }}"
+    #       - "{{ execution_nodes_subnet.subnet.id }}"
+    #     routes:
+    #       - dest: 0.0.0.0/0
+    #         gateway_id: "{{ natgw.nat_gateway_id }}"
+    #     tags:
+    #       Name: "{{ ec2_name_prefix | default('private-rt') }}"
+    #   register: private_routetable
+    #   until: private_routetable is not failed
+    #   retries: 5
