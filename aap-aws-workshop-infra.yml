@@ -39,9 +39,23 @@
             ports:
               - 443
             cidr_ip: 0.0.0.0/0
+          # postgresql
+          - proto: tcp
+            ports:
+              - 5432
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            ports:
+              - 8433
+            cidr_ip: 0.0.0.0/0
           - proto: tcp
             ports:
               - 27199
+            cidr_ip: 0.0.0.0/0
+          # grpc
+          - proto: tcp
+            ports:
+              - 50051
             cidr_ip: 0.0.0.0/0
           - proto: tcp
             ports:
