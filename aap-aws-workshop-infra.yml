@@ -39,32 +39,32 @@
             ports:
               - 443
             cidr_ip: 0.0.0.0/0
-          # postgresql
-          - proto: tcp
-            ports:
-              - 5432
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            ports:
-              - 8433
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            ports:
-              - 27199
-            cidr_ip: 0.0.0.0/0
-          # grpc
-          - proto: tcp
-            ports:
-              - 50051
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            ports:
-              - 8080-8082
-            cidr_ip: 0.0.0.0/0
-          - proto: tcp
-            ports:
-              - 8443-8445
-            cidr_ip: 0.0.0.0/0
+          ## postgresql
+          #- proto: tcp
+          #  ports:
+          #    - 5432
+          #  cidr_ip: 0.0.0.0/0
+          #- proto: tcp
+          #  ports:
+          #    - 8433
+          #  cidr_ip: 0.0.0.0/0
+          #- proto: tcp
+          #  ports:
+          #    - 27199
+          #  cidr_ip: 0.0.0.0/0
+          ## grpc
+          #- proto: tcp
+          #  ports:
+          #    - 50051
+          #  cidr_ip: 0.0.0.0/0
+          #- proto: tcp
+          #  ports:
+          #    - 8080-8082
+          #  cidr_ip: 0.0.0.0/0
+          #- proto: tcp
+          #  ports:
+          #    - 8443-8445
+          #  cidr_ip: 0.0.0.0/0
       register: created_sg
       until: created_sg is not failed
       retries: 5
